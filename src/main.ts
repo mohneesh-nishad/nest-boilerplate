@@ -2,7 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
+// import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
 import { AppModule } from './app.module';
 import type {
   CorsConfig,
@@ -14,26 +14,16 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 
 
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule);
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: false }));
   // app.register(contentParser);
 
   // Validation
   app.useGlobalPipes(new ValidationPipe());
 
-  // enable shutdown hook
-  // const prismaService: PrismaService = app.get(PrismaService);
-  // prismaService.enableShutdownHooks(app);
-  try {
-    // await prismaService.$connect()
-  } catch (error) {
-    console.log(error)
-    process.exit(0)
-  }
 
   // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>('nest');
@@ -57,7 +47,6 @@ async function bootstrap() {
   //   // app.enableCors();
   // }
 
-  // await app.listen(process.env.PORT || nestConfig.port || 3000);
   const PORT = parseInt(process.env.PORT)
   //* 0.0.0.0 fro docker network compatibility.
   const SERVER_ADDRESS = '0.0.0.0'

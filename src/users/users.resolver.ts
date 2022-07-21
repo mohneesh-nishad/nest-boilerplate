@@ -1,4 +1,3 @@
-import { PrismaService } from 'nestjs-prisma';
 import {
   Resolver,
   Query,

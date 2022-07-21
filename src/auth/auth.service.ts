@@ -1,4 +1,3 @@
-import { PrismaService } from 'nestjs-prisma';
 import { Prisma } from '@prisma/client';
 import {
   Injectable,
