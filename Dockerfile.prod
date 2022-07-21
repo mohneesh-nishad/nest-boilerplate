@@ -1,0 +1,35 @@
+FROM node:14-alpine as builder
+
+# Create app directory
+WORKDIR /app
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY ["package.json", "package-lock.json", "./"]
+COPY ["tsconfig.build.json", "tsconfig.json", "./"]
+COPY ["prisma", "./prisma/"]
+
+
+# Install app dependencies
+RUN ["npm", "install"]
+
+COPY . .
+
+RUN ["npm","run","build"]
+
+#RUN ["/bin/bash", "-c", "find . ! -name dist ! -name prisma ! -name node_modules -maxdepth 1 -mindepth 1 -exec rm -rf {} \\;"]
+
+### Creating final build
+FROM node:14-alpine
+
+WORKDIR /root/
+
+#COPY --from=builder /root/ ./
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+
+
+EXPOSE 3003
+
+CMD ["node", "./dist/main"]

@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  nest-api:
+    container_name: nest-api
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - 3003:3003
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+
+# this for using my existing local postgres container
+networks:
+  default:
+    name: docker-compose_postgres
+    external: true
