@@ -26,6 +26,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type IFollowers {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  followedBy: Int!
+  id: ID!
+  isFav: Boolean!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userId: Int!
+}
+
 type IPost {
   author: User!
   authorId: Int!
@@ -54,6 +66,7 @@ input LoginInput {
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
   createPost(data: CreatePostInput!): IPost!
+  followUser(userId: Int!): IFollowers!
   login(data: LoginInput!): Auth!
   refreshToken(token: JWT!): Token!
   signup(data: SignupInput!): Auth!
@@ -69,11 +82,11 @@ type PostBulkRes {
 
 type Query {
   allUsers: UserResponse!
+  getPost(postId: Int!): IPost!
   getSingleUser: User!
   hello(name: String!): String!
   helloWorld: String!
   me: User!
-  post(postId: Int!): IPost!
   searchUserByName(data: SearchByNameInput!): UserResponse!
   userPosts(userId: Int): PostBulkRes!
 }
@@ -122,6 +135,7 @@ type User {
   dob: DateTime
   email: String!
   firstName: String
+  followers: [User!]
   id: ID!
   isDeleted: Boolean!
   isRegister: Boolean!

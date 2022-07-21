@@ -36,7 +36,7 @@ export class PostsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => IPost)
+  @Mutation(() => IPost, { name: 'createPost' })
   async createPost(
     @UserEntity() user: User,
     @Args('data') data: CreatePostInput
@@ -97,12 +97,14 @@ export class PostsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => IPost)
-  async post(@Args() args: PostIdArgs, @UserEntity() user: User) {
+  async getPost(@Args() args: PostIdArgs, @UserEntity() user: User) {
     return this.postService.getSinglePostOfUser(args.postId, user.id)
   }
 
   @ResolveField('author')
   async author(@Parent() post: IPost) {
-    return this.userService.findOneById(post.authorId);
+    if (!post.author)
+      return this.userService.findOneById(post.authorId);
+    return post.author
   }
 }

@@ -2,12 +2,9 @@ import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { PasswordService } from 'src/auth/password.service';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import lodash from 'lodash';
-import { UserResponse } from './models/user.model.old';
 import { USER_REPOSITORY } from '../core/constants';
 import { User } from './entities';
 import { UserCreateDto } from './dto/user-create.dto';
-import { response } from 'express';
 import { UserBulkRes } from './interfaces/users-bulkres.interface';
 
 

@@ -15,12 +15,14 @@ import { UserResponse } from './models/user.model.old';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { SearchByNameInput } from './dto/search-by-name.input';
+import { FollowersService } from 'src/followers/followers.service';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
 export class UsersResolver {
   constructor(
     private usersService: UsersService,
+    private followService: FollowersService
     // private prisma: PrismaService
   ) { }
 
@@ -89,6 +91,16 @@ export class UsersResolver {
     if (parent.lastName) return parent.lastName
     return parent.name.split(' ')[1]
   }
+
+  @ResolveField()
+  async followers(@Parent() parent: User) {
+    const data = await this.followService.getAllFollowers(parent.id).then(result => {
+      //@ts-ignore
+      return result.data.map(u => u.following)
+    })
+    return data
+  }
+
   // posts(@Parent() author: User) {
   //   // if (author.posts) {
   //   //   return author.posts

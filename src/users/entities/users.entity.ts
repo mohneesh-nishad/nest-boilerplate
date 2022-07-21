@@ -1,5 +1,5 @@
-import { Field, Float, HideField, ID } from '@nestjs/graphql';
 import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, ForeignKey } from 'sequelize-typescript';
+import { Followers } from 'src/followers/entities/followers.entity';
 import { Post } from 'src/posts/entities';
 
 @Table({ modelName: 'users' })
@@ -68,6 +68,8 @@ export class User extends Model<User> {
   @UpdatedAt
   updatedAt: Date;
 
+  @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
+  followers: User[]
 }
 
 User.prototype.toJSON = function () {
@@ -75,3 +77,4 @@ User.prototype.toJSON = function () {
   delete values.password;
   return values;
 };
+

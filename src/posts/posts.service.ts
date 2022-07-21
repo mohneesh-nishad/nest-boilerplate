@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { resToJson } from "src/common/jsonParser";
 import { POST_REPOSITORY } from "src/core/constants";
+import { User } from "src/users/entities";
 import { Post } from "./entities";
 
 @Injectable()
@@ -14,7 +15,7 @@ export class PostsService {
   }
 
   async getUserPosts(userId: number) {
-    const { rows, count } = await this.postRepo.findAndCountAll({ where: { authorId: userId } })
+    const { rows, count } = await this.postRepo.findAndCountAll({ where: { authorId: userId }, include: { model: User, as: 'author' } })
     return { data: resToJson(rows), count }
   }
 

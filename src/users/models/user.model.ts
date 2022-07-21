@@ -71,4 +71,7 @@ export class User {
       'Identifies the date and time when the object was last updated.',
   })
   updatedAt: Date;
+
+  @Field(() => [User])
+  followers?: User[]
 }

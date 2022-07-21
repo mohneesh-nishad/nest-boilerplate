@@ -14,6 +14,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { DatabaseModule } from './core/database/db.module';
+import { FollowersModule } from './followers/followers.module';
 
 const dbDefaultConfig = {
   host: 'localhost',
@@ -49,6 +50,7 @@ const dbDefaultConfig = {
     AuthModule,
     UsersModule,
     PostsModule,
+    FollowersModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
