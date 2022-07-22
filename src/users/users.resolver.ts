@@ -16,6 +16,7 @@ import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { SearchByNameInput } from './dto/search-by-name.input';
 import { FollowersService } from 'src/followers/followers.service';
+import { UserConnection } from './models/user.model.old';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
@@ -32,7 +33,7 @@ export class UsersResolver {
     return user;
   }
 
-  @Query(() => UserResponse)
+  @Query(() => UserConnection)
   async allUsers(): Promise<any> {
     return this.usersService.findAll();
   }
@@ -42,7 +43,7 @@ export class UsersResolver {
     return this.usersService.getSingleUser(user.id)
   }
 
-  @Query(() => UserResponse)
+  @Query(() => UserConnection)
   async searchUserByName(
     @UserEntity() user: User,
     @Args('data') data: SearchByNameInput
@@ -92,13 +93,24 @@ export class UsersResolver {
     return parent.name.split(' ')[1]
   }
 
-  @ResolveField()
-  async followers(@Parent() parent: User) {
-    const data = await this.followService.getAllFollowers(parent.id).then(result => {
+  @ResolveField(() => [User])
+  async followings(@Parent() parent: User, @UserEntity() user: User) {
+    const data = await this.followService.getAllFollowings(parent.id).then(result => {
       //@ts-ignore
       return result.data.map(u => u.following)
     })
+    // console.log(data)
     return data
+  }
+
+  @ResolveField(() => [User])
+  async followers(@Parent() parent: User) {
+    const data = await this.followService.getAllFollowers(parent.id).then(result => {
+      //@ts-ignore
+      return result.data.map(u => u.follower)
+    })
+    // console.log(data)
+    return data || []
   }
 
   // posts(@Parent() author: User) {

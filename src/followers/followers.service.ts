@@ -11,16 +11,16 @@ export class FollowersService {
     @Inject(FOLLOWER_REPOSITORY) private readonly followRepo: typeof Followers
   ) { }
 
-  async createFollowing(userToFollow: number, followerId: number) {
-    if (userToFollow === followerId) throw new ConflictException('You cant follow yourself')
+  async createFollowing(userToFollow: number, followedBy: number) {
+    if (userToFollow === followedBy) throw new ConflictException('You cant follow yourself')
     const isFollowing = await this.followRepo.findOne({
       where: {
-        followedBy: followerId, userId: userToFollow
+        followedBy: followedBy, userId: userToFollow
       }
     })
     if (isFollowing) throw new ConflictException('You are already following this user')
 
-    const follow = await this.followRepo.create({ followedBy: followerId, userId: userToFollow })
+    const follow = await this.followRepo.create({ followedBy: followedBy, userId: userToFollow })
     if (!follow) throw new Error('Error occured in following user..!!!')
     return follow.toJSON()
   }
@@ -28,16 +28,36 @@ export class FollowersService {
   async getAllFollowers(id: number) {
     const { rows, count } = await this.followRepo.findAndCountAll({
       distinct: true,
-      where: { followedBy: id },
+      where: { userId: id },
       include: [{
         attributes: ['id', 'name', 'email', 'avatar'],
         model: User,
-        as: 'following'
+        as: 'follower'
       }]
     })
+    const data = resToJson(rows)
+    // console.log(data)
+    return { data, count }
+
+  }
+
+  getAllFollowings = async (id: number, pageNumber: number = 1, pageSize: number = 10) => {
+    let offset = pageSize * (pageNumber - 1);
+    const { rows, count } = await this.followRepo.findAndCountAll({
+      distinct: true,
+      // subQuery: false,
+      limit: pageSize,
+      offset: offset,
+      where: { followedBy: id },
+      include: [{
+        attributes: ["id", "name", "email", "avatar"],
+        model: User,
+        // where: { isDeleted: false, isVerified: true, isRegister: true },
+        as: "following"
+      }]
+    });
 
     return { data: resToJson(rows), count }
-
   }
 
 

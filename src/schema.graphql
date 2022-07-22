@@ -26,20 +26,28 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type IFollowers {
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  followedBy: Int!
-  id: ID!
-  isFav: Boolean!
+"""
+A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
+"""
+scalar JWT
 
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
-  userId: Int!
+input LoginInput {
+  email: String!
+  password: String!
 }
 
-type IPost {
-  author: User!
+type Mutation {
+  changePassword(data: ChangePasswordInput!): User!
+  createPost(data: CreatePostInput!): Post!
+  followUser(userId: Int!): followers!
+  login(data: LoginInput!): Auth!
+  refreshToken(token: JWT!): Token!
+  signup(data: SignupInput!): Auth!
+  updateUser(data: UpdateUserInput!): User!
+}
+
+type Post {
+  author: users!
   authorId: Int!
   content: String!
 
@@ -53,42 +61,35 @@ type IPost {
   updatedAt: DateTime!
 }
 
-"""
-A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
-"""
-scalar JWT
-
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-type Mutation {
-  changePassword(data: ChangePasswordInput!): User!
-  createPost(data: CreatePostInput!): IPost!
-  followUser(userId: Int!): IFollowers!
-  login(data: LoginInput!): Auth!
-  refreshToken(token: JWT!): Token!
-  signup(data: SignupInput!): Auth!
-  updateUser(data: UpdateUserInput!): User!
-}
-
-type PostBulkRes {
+type PostConnection {
   count: Int!
-  msg: String!
-  payload: [IPost!]!
-  status: String!
+  limit: Int
+  msg: String
+  page: Int
+  payload: [Post!]
+  status: String
+}
+
+"""Properties by which post connections can be ordered."""
+enum PostOrderField {
+  content
+  createdAt
+  id
+  published
+  title
+  updatedAt
 }
 
 type Query {
-  allUsers: UserResponse!
-  getPost(postId: Int!): IPost!
+  allUsers: UserConnection!
+  getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
+  getPost(postId: Int!): Post!
   getSingleUser: User!
   hello(name: String!): String!
   helloWorld: String!
   me: User!
-  searchUserByName(data: SearchByNameInput!): UserResponse!
-  userPosts(userId: Int): PostBulkRes!
+  searchUserByName(data: SearchByNameInput!): UserConnection!
+  userPosts(userId: Int): PostConnection!
 }
 
 """User role"""
@@ -110,7 +111,7 @@ input SignupInput {
 }
 
 type Subscription {
-  postCreated: IPost!
+  postCreated: Post!
 }
 
 type Token {
@@ -136,6 +137,7 @@ type User {
   email: String!
   firstName: String
   followers: [User!]
+  followings: [User!]!
   id: ID!
   isDeleted: Boolean!
   isRegister: Boolean!
@@ -154,8 +156,55 @@ type User {
   walletAddress: String!
 }
 
-type UserResponse {
+type UserConnection {
   count: Int!
-  msg: String!
-  payload: [User!]!
+  limit: Int
+  msg: String
+  page: Int
+  payload: [User!]
+  status: String
+}
+
+type followers {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  followedBy: Int
+  followers: [users!]
+  followings: [users!]
+  id: ID!
+  isFav: Boolean
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userId: Int
+}
+
+input getAllPostInput {
+  limit: Int = 50
+  orderBy: PostOrderField!
+  page: Int = 1
+}
+
+type users {
+  avatar: String!
+  coins: Int!
+  createdAt: DateTime!
+  dob: DateTime!
+  email: String!
+  followers: [followers!]
+  followings: [followers!]
+  id: Int!
+  isDeleted: Boolean!
+  isRegister: Boolean!
+  isVerified: Boolean!
+  name: String!
+  nonce: String!
+  phoneNumber: String!
+  posts: [Post!]
+  role: String!
+  tcgAvatar: String!
+  updatedAt: DateTime!
+  userInfo: Int!
+  userType: Int!
+  walletAddress: String!
 }

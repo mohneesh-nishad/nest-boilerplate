@@ -6,6 +6,7 @@ import {
   Int,
 } from '@nestjs/graphql';
 import { Role } from '@prisma/client';
+import Paginator from 'src/common/pagination/nwpagination';
 import { User } from './user.model';
 
 registerEnumType(Role, {
@@ -36,3 +37,6 @@ export class UserResponse {
   @Field(() => String)
   msg: string
 }
+
+@ObjectType()
+export class UserConnection extends Paginator(User) { }

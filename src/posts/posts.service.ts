@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { resToJson } from "src/common/jsonParser";
 import { POST_REPOSITORY } from "src/core/constants";
 import { User } from "src/users/entities";
@@ -19,8 +19,25 @@ export class PostsService {
     return { data: resToJson(rows), count }
   }
 
+  async getAllPosts(page: number, limit: number, orderBy: string) {
+    const offset = limit * (page - 1)
+    const { rows, count } = await this.postRepo.findAndCountAll({
+      distinct: true,
+      offset: offset,
+      limit: limit,
+      include: {
+        attributes: ['id', 'name', 'email'],
+        model: User
+      },
+      order: [[orderBy, 'desc']]
+    })
+    return { data: resToJson(rows), count }
+  }
+
 
   async getSinglePostOfUser(postId: number, userId: number) {
-    return this.postRepo.findOne({ where: { id: postId, authorId: userId } })
+    const post = await this.postRepo.findOne({ where: { id: postId, authorId: userId } })
+    if (!post) throw new NotFoundException('Post not found')
+    return post;
   }
 }

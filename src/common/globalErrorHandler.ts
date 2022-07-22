@@ -8,7 +8,7 @@ export class GlobalErrorHandler extends BaseExceptionFilter {
     super.catch(exception, host)
   }
 
-  handle(error) {
+  handle(error: any) {
     console.log(error);
     if (error instanceof ConflictException) {
       throw error
