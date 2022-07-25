@@ -1,12 +1,15 @@
-import { Field, HideField, ObjectType } from '@nestjs/graphql';
+import { Field, Float, HideField, ObjectType } from '@nestjs/graphql';
 import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, ForeignKey } from 'sequelize-typescript';
+import { Role } from 'src/common/enums';
 import { Followers } from 'src/followers/entities/followers.entity';
 import { IFollowers } from 'src/followers/models/followers.model';
 import { Post } from 'src/posts/entities';
 import { IPost } from 'src/posts/models/post.model';
 
+
+
 @Table({ modelName: 'users' })
-@ObjectType()
+@ObjectType('User')
 export class User extends Model<User> {
 
   @Field()
@@ -16,6 +19,12 @@ export class User extends Model<User> {
   @Field()
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   name: string;
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
 
   @Field()
   @Column({ type: DataType.DATE, allowNull: true, defaultValue: null })
@@ -57,23 +66,23 @@ export class User extends Model<User> {
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   password: string;
 
-  @Field()
+  @Field(() => Role)
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'USER', validate: { isIn: [['ADMIN', 'USER', 'GUEST']] } })
-  role: string;
+  role: Role;
 
-  @Field()
+  @Field(() => Float)
   @Column({ type: DataType.DECIMAL(10, 2), allowNull: true, defaultValue: 0.00 })
   coins: number;
 
-  @Field()
+  @Field(() => Boolean)
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isVerified: boolean;
 
-  @Field()
+  @Field(() => Boolean)
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isRegister: boolean;
 
-  @Field()
+  @Field(() => Boolean)
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isDeleted: boolean
 
@@ -90,13 +99,13 @@ export class User extends Model<User> {
   @UpdatedAt
   updatedAt: Date;
 
-  // // @HasMany(() => Followers, { as: 'followers', onDelete: 'cascade', hooks: true })
-  @Field(() => [Followers], { nullable: true })
-  followers: Followers
+  @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
+  // @Field(() => [Followers], { nullable: true })
+  followers: User[]
   // followers?: User[]
 
-  @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
-  @Field(() => [Followers], { nullable: true })
+  // @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
+  // @Field(() => [Followers], { nullable: true })
   followings?: User[]
 }
 

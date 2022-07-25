@@ -10,7 +10,7 @@ import { Body, UseGuards } from '@nestjs/common';
 import { UserEntity } from 'src/common/decorators/user.decorator';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { UsersService } from './users.service';
-import { User } from './models/user.model';
+import { User } from './entities';
 import { UserResponse } from './models/user.model.old';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';

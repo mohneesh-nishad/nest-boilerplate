@@ -5,14 +5,10 @@ import {
   Field,
   Int,
 } from '@nestjs/graphql';
-import { Role } from '@prisma/client';
 import Paginator from 'src/common/pagination/nwpagination';
-import { User } from './user.model';
+import { User } from '../entities';
+// import { User } from './user.model';
 
-registerEnumType(Role, {
-  name: 'Role',
-  description: 'User role',
-});
 
 // @ObjectType()
 // export class User extends BaseModel {
