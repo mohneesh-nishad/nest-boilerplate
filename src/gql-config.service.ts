@@ -3,14 +3,16 @@ import { ConfigService } from '@nestjs/config';
 import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Injectable } from '@nestjs/common';
 import { GqlOptionsFactory } from '@nestjs/graphql';
+import { UsersModule } from './users/users.module';
 
 @Injectable()
 export class GqlConfigService implements GqlOptionsFactory {
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
   createGqlOptions(): ApolloDriverConfig {
     const graphqlConfig = this.configService.get<GraphqlConfig>('graphql');
     return {
       // schema options
+      // include: [UsersModule],
       autoSchemaFile: graphqlConfig.schemaDestination || './src/schema.graphql',
       sortSchema: graphqlConfig.sortSchema,
       buildSchemaOptions: {

@@ -12,20 +12,19 @@ import type {
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 // import { contentParser } from 'fastify-multer';
 
-
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: false }));
-  // app.register(contentParser);
+  const server = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: false }));
+  // server.register(contentParser);
 
   // Validation
-  app.useGlobalPipes(new ValidationPipe());
+  server.useGlobalPipes(new ValidationPipe());
 
 
   // Prisma Client Exception Filter for unhandled exceptions
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  // const { httpAdapter } = server.get(HttpAdapterHost);
+  // server.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
-  const configService = app.get(ConfigService);
+  const configService = server.get(ConfigService);
   const nestConfig = configService.get<NestConfig>('nest');
   const corsConfig = configService.get<CorsConfig>('cors');
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
@@ -37,25 +36,30 @@ async function bootstrap() {
       .setDescription(swaggerConfig.description || 'The nestjs API description')
       .setVersion(swaggerConfig.version || '1.0')
       .build();
-    const document = SwaggerModule.createDocument(app, options);
+    const document = SwaggerModule.createDocument(server, options);
 
-    SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
+    SwaggerModule.setup(swaggerConfig.path || 'api', server, document);
   }
 
   // Cors
   // if (corsConfig.enabled) {
-  //   // app.enableCors();
+  //   // server.enableCors();
   // }
+  server.enableShutdownHooks()
 
   const PORT = parseInt(process.env.PORT)
   //* 0.0.0.0 fro docker network compatibility.
   const SERVER_ADDRESS = '0.0.0.0'
-  app.listen(PORT, SERVER_ADDRESS, function (error, address) {
-    if (error) {
-      console.log(error);
+
+  server.listen(PORT, SERVER_ADDRESS, (err, address) => {
+    if (err) {
+      console.log('error from listener')
+      console.log(err);
       process.exit(1);
+    } else {
+      console.log(`Application is running on: ${address}`);
     }
-    console.log(`Application is running on: ${address}`);
   });
 }
+
 bootstrap();
