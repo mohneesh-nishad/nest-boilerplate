@@ -47,7 +47,7 @@ type Mutation {
 }
 
 type Post {
-  author: users!
+  author: User!
   authorId: Int!
   content: String!
 
@@ -128,31 +128,28 @@ input UpdateUserInput {
 }
 
 type User {
-  avatar: String
+  avatar: String!
   coins: Float!
-
-  """Identifies the date and time when the object was created."""
   createdAt: DateTime!
-  dob: DateTime
+  dob: DateTime!
   email: String!
-  firstName: String
-  followers: [User!]
-  followings: [User!]!
-  id: ID!
+  firstName: String!
+  followers: [User!]!
+  followings: [User!]
+  id: Int!
   isDeleted: Boolean!
   isRegister: Boolean!
   isVerified: Boolean!
-  lastName: String
+  lastName: String!
   name: String!
   nonce: String!
-  phoneNumber: String
+  phoneNumber: String!
+  posts: [Post!]
   role: Role!
   tcgAvatar: String!
-
-  """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
-  userInfo: Int
-  userType: Int
+  userInfo: Int!
+  userType: Int!
   walletAddress: String!
 }
 
@@ -169,8 +166,8 @@ type followers {
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
   followedBy: Int
-  followers: [users!]
-  followings: [users!]
+  followers: [User!]
+  followings: [User!]
   id: ID!
   isFav: Boolean
 
@@ -183,28 +180,4 @@ input getAllPostInput {
   limit: Int = 50
   orderBy: PostOrderField!
   page: Int = 1
-}
-
-type users {
-  avatar: String!
-  coins: Int!
-  createdAt: DateTime!
-  dob: DateTime!
-  email: String!
-  followers: [followers!]
-  followings: [followers!]
-  id: Int!
-  isDeleted: Boolean!
-  isRegister: Boolean!
-  isVerified: Boolean!
-  name: String!
-  nonce: String!
-  phoneNumber: String!
-  posts: [Post!]
-  role: String!
-  tcgAvatar: String!
-  updatedAt: DateTime!
-  userInfo: Int!
-  userType: Int!
-  walletAddress: String!
 }
