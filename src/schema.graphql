@@ -17,7 +17,10 @@ input ChangePasswordInput {
 }
 
 input CreatePostInput {
+  """min lenth: 8"""
   content: String!
+
+  """min length: 3 chars"""
   title: String!
 }
 
@@ -38,6 +41,11 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
+
+  """
+  API to create a post.
+   Auth Required 
+  """
   createPost(data: CreatePostInput!): Post!
   followUser(userId: Int!): followers!
   login(data: LoginInput!): Auth!
@@ -89,7 +97,7 @@ type Query {
   helloWorld: String!
   me: User!
   searchUserByName(data: SearchByNameInput!): UserConnection!
-  userPosts(userId: Int): PostConnection!
+  userPosts(limit: Int = 20, orderBy: PostOrderField!, page: Int = 1, userId: Int): PostConnection!
 }
 
 """User role"""
@@ -128,29 +136,29 @@ input UpdateUserInput {
 }
 
 type User {
-  avatar: String!
+  avatar: String
   coins: Float!
   createdAt: DateTime!
-  dob: DateTime!
-  email: String!
-  firstName: String!
-  followers: [User!]!
-  followings: [User!]
+  dob: DateTime
+  email: String
+  firstName: String
+  followers: [followers!]
+  followings: [followers!]
   id: Int!
   isDeleted: Boolean!
   isRegister: Boolean!
   isVerified: Boolean!
-  lastName: String!
+  lastName: String
   name: String!
-  nonce: String!
-  phoneNumber: String!
-  posts: [Post!]
+  nonce: String
+  phoneNumber: String
+  posts: PostConnection
   role: Role!
-  tcgAvatar: String!
+  tcgAvatar: String
   updatedAt: DateTime!
-  userInfo: Int!
-  userType: Int!
-  walletAddress: String!
+  userInfo: Int
+  userType: Int
+  walletAddress: String
 }
 
 type UserConnection {
@@ -177,7 +185,7 @@ type followers {
 }
 
 input getAllPostInput {
-  limit: Int = 50
+  limit: Int = 20
   orderBy: PostOrderField!
   page: Int = 1
 }
