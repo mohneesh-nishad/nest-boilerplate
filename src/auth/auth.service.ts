@@ -50,7 +50,7 @@ export class AuthService {
     }
   }
 
-  async login(email: string, password: string): Promise<Token> {
+  async login(email: string, password: string): Promise<Auth> {
     const user = await this.user.findOneByEmail(email);
 
     if (!user) {
@@ -66,9 +66,11 @@ export class AuthService {
       throw new BadRequestException('Invalid password');
     }
 
-    return this.generateTokens({
-      userId: user.id,
-    });
+    return {
+      ...this.generateTokens({
+        userId: user.id,
+      }), user
+    };
   }
 
   validateUser(userId: number): Promise<any> {

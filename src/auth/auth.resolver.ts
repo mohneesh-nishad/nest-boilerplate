@@ -31,12 +31,13 @@ export class AuthResolver {
 
   @Mutation(() => Auth)
   async login(@Args('data') { email, password }: LoginInput) {
-    const { accessToken, refreshToken } = await this.auth.login(
+    const { accessToken, refreshToken, user } = await this.auth.login(
       email.toLowerCase(),
       password
     );
 
     return {
+      user,
       accessToken,
       refreshToken,
     };
@@ -49,6 +50,7 @@ export class AuthResolver {
 
   @ResolveField('user', () => User)
   async user(@Parent() auth: Auth) {
+    if (auth.user) return auth.user;
     return await this.auth.getUserFromToken(auth.accessToken);
   }
 }
