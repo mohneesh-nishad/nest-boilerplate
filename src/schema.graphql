@@ -59,6 +59,7 @@ type Mutation {
   refreshToken(token: JWT!): Token!
   signup(data: SignupInput!): Auth!
   updateUser(data: UpdateUserInput!): User!
+  updateUserProfile(data: UpdateProfileInput!): User!
 }
 
 type Post {
@@ -137,6 +138,14 @@ type Token {
   refreshToken: JWT!
 }
 
+input UpdateProfileInput {
+  bio: String
+  country: String
+  gender: Gender!
+  job: String
+  website: String
+}
+
 input UpdateUserInput {
   firstname: String
   lastname: String
@@ -204,6 +213,7 @@ type userProfile {
   gender: Gender
   isDeleted: Boolean
   job: String
+  user: User!
   userId: Int!
   website: String
 }

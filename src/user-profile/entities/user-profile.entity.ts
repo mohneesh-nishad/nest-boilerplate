@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { Column, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, HasOne, Model, Table, Unique } from "sequelize-typescript";
 import { DataTypes } from "sequelize";
 import { Gender } from "src/common/enums/user-gender.enum";
 import { User } from "../../users/entities/users.entity";
@@ -8,8 +8,10 @@ import { User } from "../../users/entities/users.entity";
 @ObjectType('userProfile')
 export class UserProfile extends Model<UserProfile> {
     @Field()
+    @Unique
     @Column({ type: DataTypes.INTEGER, allowNull: false })
     @ForeignKey(() => User)
+    // @BelongsTo(() => User, 'userId')
     userId: number;
 
     @Field(() => Gender, { nullable: true })
@@ -35,4 +37,7 @@ export class UserProfile extends Model<UserProfile> {
     @Field({ nullable: true })
     @Column({ type: DataTypes.BOOLEAN, defaultValue: false })
     isDeleted: Boolean
+
+    @HasOne(() => User)
+    user: User
 }

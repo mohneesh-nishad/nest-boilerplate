@@ -1,5 +1,5 @@
 import { Field, Float, HideField, ObjectType } from '@nestjs/graphql';
-import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, Unique, HasOne } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, Unique, HasOne, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { Role } from 'src/common/enums';
 import { Followers } from 'src/followers/entities/followers.entity';
 import { IFollowers } from 'src/followers/models/followers.model';
@@ -111,7 +111,9 @@ export class User extends Model<User> {
   @Field(() => [User], { nullable: true })
   followings?: User[]
 
-  @HasOne(() => UserProfile, { onDelete: 'cascade', hooks: true })
+  // @HasOne(() => UserProfile, { onDelete: 'cascade', hooks: true })
+  // @BelongsTo(() => UserProfile, 'userId')
+  @ForeignKey(() => UserProfile)
   @Field(() => UserProfile, { nullable: true })
   profile?: UserProfile
 }
