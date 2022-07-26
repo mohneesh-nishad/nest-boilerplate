@@ -4,15 +4,17 @@ import {
   BadRequestException,
   ConflictException,
   UnauthorizedException,
+  HttpException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PasswordService } from './password.service';
 import { SignupInput } from './dto/signup.input';
-import { Token } from './models/token.model';
+import { Token } from './models/token.entity';
 import { SecurityConfig } from 'src/common/configs/config.interface';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities';
+import { Auth } from './models/auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,26 +26,27 @@ export class AuthService {
     private readonly configService: ConfigService
   ) { }
 
-  async createUser(payload: SignupInput): Promise<Token> {
+  async createUser(payload: SignupInput): Promise<Auth> {
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password
     );
 
     try {
+      const emailExist = await this.user.findOneByEmail(payload.email);
+      if (emailExist) throw new ConflictException;
       const user = await this.user.create({ ...payload, password: hashedPassword });
-
-      return this.generateTokens({
-        userId: user.id,
-      });
-    } catch (e) {
-      if (
-        // e instanceof Prisma.PrismaClientKnownRequestError &&
-        e.code === 'P2002'
-      ) {
-        throw new ConflictException(`Email ${payload.email} already used.`);
-      } else {
-        throw new Error(e);
+      // console.log(user.toJSON())
+      return {
+        user: user.toJSON(),
+        ...this.generateTokens({
+          userId: user.id,
+        })
       }
+    } catch (e) {
+      if (e instanceof ConflictException)
+        throw new ConflictException(`Email ${payload.email} already used.`);
+      console.log(e)
+      throw new HttpException(e.message, 400);
     }
   }
 

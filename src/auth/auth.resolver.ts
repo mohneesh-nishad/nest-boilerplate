@@ -6,8 +6,8 @@ import {
   ResolveField,
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { Auth } from './models/auth.model';
-import { Token } from './models/token.model';
+import { Auth } from './models/auth.entity';
+import { Token } from './models/token.entity';
 import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
 import { RefreshTokenInput } from './dto/refresh-token.input';
@@ -21,8 +21,9 @@ export class AuthResolver {
   @Mutation(() => Auth)
   async signup(@Args('data') data: SignupInput) {
     data.email = data.email.toLowerCase();
-    const { accessToken, refreshToken } = await this.auth.createUser(data);
+    const { accessToken, refreshToken, user } = await this.auth.createUser(data);
     return {
+      user,
       accessToken,
       refreshToken,
     };
