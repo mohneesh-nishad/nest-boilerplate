@@ -19,7 +19,7 @@ import { UserIdArgs } from './args/user-id.args';
 import { Post } from './entities';
 import { PostConnection } from './models/post-connection.model';
 import { PostOrder } from './dto/post-order.input';
-import { CreatePostInput } from './dto/createPost.input';
+import { CreatePostInput } from './dto/create-post.input';
 import { PostsService } from './posts.service';
 import { UsersService } from 'src/users/users.service';
 import { PostBulkRes } from './interfaces/bulk-post.interface';
@@ -37,7 +37,7 @@ export class PostsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Post, { name: 'createPost' })
+  @Mutation(() => Post, { name: 'createPost', description: 'API to create a post.\n Auth Required ' })
   async createPost(
     @UserEntity() user: User,
     @Args('data') data: CreatePostInput
@@ -89,10 +89,11 @@ export class PostsResolver {
   // }
 
   @Query(() => PostConnection)
-  async userPosts(@Args() id: UserIdArgs): Promise<PostConnection> {
-    const { data, count } = await this.postService.getUserPosts(id.userId)
+  async userPosts(@Args() args: UserIdArgs): Promise<PostConnection> {
+    const { page, limit, userId, orderBy } = args
+    const { data, count } = await this.postService.getUserPosts(page, limit, userId)
     // console.log(data);
-    const msg = count ? `Posts fetched of user id = ${id.userId}` : `No posts from user.`
+    const msg = count ? `Posts fetched of user id = ${args}.userId}` : `No posts from user.`
     return { payload: data, count, msg }
   }
 

@@ -14,8 +14,17 @@ export class PostsService {
     return (await this.postRepo.create(data)).toJSON()
   }
 
-  async getUserPosts(userId: number) {
-    const { rows, count } = await this.postRepo.findAndCountAll({ where: { authorId: userId }, include: { model: User, as: 'author' } })
+  async getUserPosts(page: number, limit: number, userId: number, orderBy: string = 'createdAt',) {
+    // const { rows, count } = await this.postRepo.findAndCountAll({ where: { authorId: userId }, include: { model: User, as: 'author' } })
+    // const { rows, count } = await this.postRepo.findAndCountAll({ where: { authorId: userId } })
+    const offset = limit * (page - 1)
+    const { rows, count } = await this.postRepo.findAndCountAll({
+      distinct: true,
+      offset: offset,
+      limit: limit,
+      where: { authorId: userId },
+      order: [[orderBy, 'desc']]
+    })
     return { data: resToJson(rows), count }
   }
 
