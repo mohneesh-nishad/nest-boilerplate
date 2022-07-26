@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Followers } from 'src/followers/entities';
 import { Post } from 'src/posts/entities';
-import { User } from 'src/users/entities';
+import { User, UserProfile } from 'src/users/entities';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
 import { db_config } from '../envs';
 
@@ -14,7 +14,7 @@ export const databaseProviders = [{
     console.log('CONFIG IS  ==========>>>')
     console.log(config)
     const sequelize = new Sequelize(config);
-    sequelize.addModels([User, Post, Followers]);
+    sequelize.addModels([User, Post, Followers, UserProfile]);
     // sequelize.addModels([process.cwd() + '/**/*.entity.ts'])
     // sequelize.addModels([process.cwd() + '/**/entities'])
     await sequelize.sync();

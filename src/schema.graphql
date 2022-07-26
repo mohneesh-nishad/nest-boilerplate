@@ -29,6 +29,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""User Gender"""
+enum Gender {
+  FEMALE
+  MALE
+  OTHER
+}
+
 """
 A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 """
@@ -142,8 +149,8 @@ type User {
   dob: DateTime
   email: String
   firstName: String
-  followers: [followers!]
-  followings: [followers!]
+  followers: [User!]
+  followings: [User!]
   id: Int!
   isDeleted: Boolean!
   isRegister: Boolean!
@@ -153,6 +160,7 @@ type User {
   nonce: String
   phoneNumber: String
   posts: PostConnection
+  profile: userProfile
   role: Role!
   tcgAvatar: String
   updatedAt: DateTime!
@@ -188,4 +196,14 @@ input getAllPostInput {
   limit: Int = 20
   orderBy: PostOrderField!
   page: Int = 1
+}
+
+type userProfile {
+  bio: String
+  country: String
+  gender: Gender
+  isDeleted: Boolean
+  job: String
+  userId: Int!
+  website: String
 }

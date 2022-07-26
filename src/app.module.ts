@@ -15,6 +15,7 @@ import { GqlConfigService } from './gql-config.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { DatabaseModule } from './core/database/db.module';
 import { FollowersModule } from './followers/followers.module';
+import { UserProfileModule } from './user-profile/user-profile.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FollowersModule } from './followers/followers.module';
     UsersModule,
     PostsModule,
     FollowersModule,
+    UserProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

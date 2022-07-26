@@ -1,4 +1,4 @@
-import { ArgumentsHost, ConflictException, Global, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { ArgumentsHost, BadRequestException, ConflictException, Global, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { BaseExceptionFilter } from "@nestjs/core/exceptions/base-exception-filter";
 
 @Global()
@@ -14,7 +14,9 @@ export class GlobalErrorHandler extends BaseExceptionFilter {
       throw error
     } else if (error?.original?.code === '23503')
       throw new NotFoundException()
-    else
+    else if (error instanceof BadRequestException) {
+      throw error
+    } else
       throw new InternalServerErrorException()
   }
 }

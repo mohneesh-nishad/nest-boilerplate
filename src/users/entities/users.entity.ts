@@ -1,11 +1,12 @@
 import { Field, Float, HideField, ObjectType } from '@nestjs/graphql';
-import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, ForeignKey, Unique } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, Unique, HasOne } from 'sequelize-typescript';
 import { Role } from 'src/common/enums';
 import { Followers } from 'src/followers/entities/followers.entity';
 import { IFollowers } from 'src/followers/models/followers.model';
 import { Post } from 'src/posts/entities';
 import { PostConnection } from 'src/posts/models/post-connection.model';
 import { IPost } from 'src/posts/models/post.model';
+import { UserProfile } from '../../user-profile/entities/user-profile.entity';
 
 
 
@@ -102,18 +103,17 @@ export class User extends Model<User> {
   updatedAt: Date;
 
   @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
-  @Field(() => [Followers], { nullable: true })
+  @Field(() => [User], { nullable: true })
   // followers: User[]
   followers?: User[]
 
   @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
-  @Field(() => [Followers], { nullable: true })
+  @Field(() => [User], { nullable: true })
   followings?: User[]
+
+  @HasOne(() => UserProfile, { onDelete: 'cascade', hooks: true })
+  @Field(() => UserProfile, { nullable: true })
+  profile?: UserProfile
 }
 
-User.prototype.toJSON = function () {
-  const values = Object.assign({}, this.get());
-  delete values.password;
-  return values;
-};
 

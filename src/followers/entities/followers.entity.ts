@@ -22,6 +22,7 @@ export class Followers extends BaseModel {
   followedBy?: number
 
   // @Field(() => [User])
+
   @BelongsTo(() => User, { foreignKey: 'followedBy', as: 'follower' })
   followers?: User[]
 
