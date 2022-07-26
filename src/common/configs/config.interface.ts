@@ -1,9 +1,12 @@
+import { IDatabaseConfigAttributes } from "src/core/database/db.interface";
+
 export interface Config {
   nest: NestConfig;
   cors: CorsConfig;
   swagger: SwaggerConfig;
   graphql: GraphqlConfig;
   security: SecurityConfig;
+  database: IDatabaseConfigAttributes
 }
 
 export interface NestConfig {
