@@ -6,14 +6,14 @@ Starter template for 😻 [NestJS](https://nestjs.com/) and [Prisma](https://www
 
 ## Version
 
-| Branch                                                                                                       |  Nest | Prisma                                               |  Graphql                                                              |
-| ------------------------------------------------------------------------------------------------------------ | ----- | ---------------------------------------------------- | --------------------------------------------------------------------- |
-| main                                                                                                       | v8    | [v2](https://github.com/prisma/prisma2)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
-| [nest-7](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-7)                                                                                                       | v7    | [v2](https://github.com/prisma/prisma2)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
+| Branch                                                                                                              |  Nest | Prisma                                          |  Graphql                                                              |
+| ------------------------------------------------------------------------------------------------------------------- | ----- | ----------------------------------------------- | --------------------------------------------------------------------- |
+| main                                                                                                                | v8    | [v2](https://github.com/prisma/prisma2)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
+| [nest-7](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-7)                                       | v7    | [v2](https://github.com/prisma/prisma2)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
 | [nest-6-prisma2-code-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-prisma2-code-first) | v6    | [v2-preview](https://github.com/prisma/prisma2) | [Code-first](https://github.com/19majkel94/type-graphql)              |
-| [nest-6-code-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-code-first)         | v6    | [v1](https://github.com/prisma/prisma)               | [Code-first](https://github.com/19majkel94/type-graphql)              |
-| [nest-6-sdl-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-sdl-first)                                                                                        | v6    | [v1](https://github.com/prisma/prisma)               | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
-| [nest-5](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-5)                     | v5    | [v1](https://github.com/prisma/prisma)               | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
+| [nest-6-code-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-code-first)                 | v6    | [v1](https://github.com/prisma/prisma)          | [Code-first](https://github.com/19majkel94/type-graphql)              |
+| [nest-6-sdl-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-sdl-first)                   | v6    | [v1](https://github.com/prisma/prisma)          | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
+| [nest-5](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-5)                                       | v5    | [v1](https://github.com/prisma/prisma)          | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
 
 ## Features
 
@@ -77,7 +77,7 @@ docker-compose -f docker-compose.db.yml up -d
 npm run docker:db
 ```
 
-### 3. Prisma Migrate
+<!-- ### 3. Prisma Migrate
 
 [Prisma Migrate](https://github.com/prisma/prisma2/tree/master/docs/prisma-migrate) is used to manage the schema and migration of the database. Prisma datasource requires an environment variable `DATABASE_URL` for the connection to the PostgreSQL database. Prisma reads the `DATABASE_URL` from the root [.env](./.env) file.
 
@@ -129,7 +129,7 @@ Execute the script with this command:
 
 ```bash
 npm run seed
-```
+``` -->
 
 ### 6. Start NestJS Server
 
@@ -160,6 +160,137 @@ Open up the [example GraphQL queries](graphql/auth.graphql) and copy them to the
 {
   "Authorization": "Bearer YOURTOKEN"
 }
+```
+
+### Graphql Queries
+
+```js
+mutation Signup($data:SignupInput!){
+  signup(data:$data){
+    user{
+      id
+      name
+      firstName
+      lastName
+      email
+    }
+    accessToken
+    refreshToken
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "email": "a@mail.com",
+    "password": "password",
+    "name": "abcd"
+  }
+}
+```
+
+```js
+{
+  me{
+    id
+    name
+    email
+    posts{
+      payload{
+      id
+      title
+      content
+      createdAt
+      }
+      count
+    }
+  }
+}
+```
+
+```json
+{
+  "Authorization": "Bearer YOURTOKEN"
+}
+```
+
+```js
+mutation MakePost($data: CreatePostInput!){
+  createPost(data:$data){
+    id
+    title
+    content
+    authorId
+    author{
+      name
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "title": "post #1",
+    "content": "this is c00ntent"
+  }
+}
+```
+
+```js
+query SinglePost{
+  getPost(postId:1){
+    id
+    title
+    content
+    author{
+      id
+      name
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query Allposts{
+  getAllPosts(getAllPostInput:{
+    orderBy: id
+  }){
+    payload{
+      id
+      authorId
+    }
+    count
+  }
+}
+```
+
+```json
+{
+  "authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1ODgyNDgwNiwiZXhwIjoxNjU5NDI5NjA2fQ.Et9YRx2HV-OCwMM3HX0WM_roBVZ0F21Ee77WLGPXSME"
+}
+```
+
+```js
+mutation{
+  login(data:{ email:"a@mail.com", password: "password"}){
+    user{
+      id
+      email
+      posts{
+        count
+      }
+    }
+    accessToken
+    refreshToken
+  }
+}
+```
+
+```json
+
 ```
 
 ## Rest Api
@@ -226,7 +357,7 @@ docker-compose up -d
 npm run docker
 ```
 
-## Schema Development
+<!-- ## Schema Development
 
 Update the Prisma schema `prisma/schema.prisma` and after that run the following two commands:
 
@@ -237,7 +368,7 @@ npx prisma generate --watch
 # or
 npm run prisma:generate
 npm run prisma:generate:watch
-```
+``` -->
 
 **[⬆ back to top](#overview)**
 
