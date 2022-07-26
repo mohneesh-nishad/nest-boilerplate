@@ -1,9 +1,10 @@
 import { Field, Float, HideField, ObjectType } from '@nestjs/graphql';
-import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, HasMany, ForeignKey, Unique } from 'sequelize-typescript';
 import { Role } from 'src/common/enums';
 import { Followers } from 'src/followers/entities/followers.entity';
 import { IFollowers } from 'src/followers/models/followers.model';
 import { Post } from 'src/posts/entities';
+import { PostConnection } from 'src/posts/models/post-connection.model';
 import { IPost } from 'src/posts/models/post.model';
 
 
@@ -16,49 +17,50 @@ export class User extends Model<User> {
   @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   id: number;
 
-  @Field()
+  @Field(() => String)
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   name: string;
 
-  @Field()
-  firstName: string;
+  @Field(() => String)
+  firstName?: string;
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.DATE, allowNull: true, defaultValue: null })
   dob: Date;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   phoneNumber: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.INTEGER, allowNull: true, defaultValue: 1 })
   userType: number;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.INTEGER, allowNull: true, defaultValue: 1 })
   userInfo: number; // 1 for xana or 2 for xanalia 3 for tcg
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   walletAddress: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   nonce: string;
 
-  @Field()
-  @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
+  @Field({ nullable: true })
+  @Unique('email')
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: null, unique: 'email' })
   email: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   avatar: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
   tcgAvatar: string;
 
@@ -86,7 +88,7 @@ export class User extends Model<User> {
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isDeleted: boolean
 
-  @Field(() => [Post], { nullable: true })
+  @Field(() => PostConnection, { nullable: true })
   @HasMany(() => Post)
   posts?: Post[]
 
@@ -100,12 +102,12 @@ export class User extends Model<User> {
   updatedAt: Date;
 
   @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
-  // @Field(() => [Followers], { nullable: true })
-  followers: User[]
-  // followers?: User[]
+  @Field(() => [Followers], { nullable: true })
+  // followers: User[]
+  followers?: User[]
 
-  // @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
-  // @Field(() => [Followers], { nullable: true })
+  @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
+  @Field(() => [Followers], { nullable: true })
   followings?: User[]
 }
 
