@@ -16,4 +16,8 @@ services:
 
 volumes:
   postgres:
-    name: nest-db
+    name: pg-db
+
+networks:
+  default:
+    name: pg-net

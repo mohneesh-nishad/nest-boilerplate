@@ -1,20 +1,42 @@
 version: '3.7'
 services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - .env
+    # networks:
+    #   - nest-net
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
   nest-api:
     container_name: nest-api
     build:
       context: .
       dockerfile: Dockerfile.prod
     ports:
-      - 3003:3003
+      - 3000:3000
     depends_on:
       - postgres
+    environment:
+      - NODE_ENV=docker-prod
     env_file:
-      - .env
+      - .env.docker
+    # networks:
+    #   - nest-net
 
+volumes:
+  postgres:
+    name: nest-db
 
 # this for using my existing local postgres container
-networks:
-  default:
-    name: docker-compose_postgres
-    external: true
+# networks:
+#   nest-net:
+#     driver: bridge
