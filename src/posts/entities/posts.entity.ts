@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { BaseModel } from "src/common/models/base.model";
 import { User } from "src/users/entities";
+import { withRelayPagination } from '@thomas-smyth/sequelize-cursor-pagination'
 
 @Table({ tableName: 'posts' })
 @ObjectType('Post')
@@ -29,3 +30,5 @@ export class Post extends BaseModel {
   author: User
 
 }
+
+withRelayPagination()(Post)

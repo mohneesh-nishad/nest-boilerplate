@@ -76,6 +76,21 @@ type Mutation {
   updateUserProfile(data: UpdateProfileInput!): UserResponse!
 }
 
+"""
+Possible directions in which to order a list of items when provided an `orderBy` argument.
+"""
+enum OrderDirection {
+  asc
+  desc
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
 type Post {
   author: User!
   authorId: Int!
@@ -100,6 +115,22 @@ type PostConnection {
   status: String
 }
 
+type PostCursorConnection {
+  edges: [PostEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+input PostOrder {
+  direction: OrderDirection!
+  field: PostOrderField!
+}
+
 """Properties by which post connections can be ordered."""
 enum PostOrderField {
   content
@@ -119,6 +150,7 @@ type ProfileResponse {
 type Query {
   allUsers: UserConnection!
   getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
+  getAllPublishedPosts(after: String, before: String, first: Int, last: Int, orderBy: PostOrder, query: String, skip: Int): PostCursorConnection!
   getMyProfile: ProfileResponse!
   getPost(postId: Int!): Post!
   getSingleUser: UserResponse!
@@ -211,10 +243,16 @@ type UserConnection {
 type UserProfile {
   bio: String
   country: String
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
   gender: Gender
-  id: Int!
+  id: ID!
   isDeleted: DateTime
   job: String
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
   userId: Int!
   website: String
 }

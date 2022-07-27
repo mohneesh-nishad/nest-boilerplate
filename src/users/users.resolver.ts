@@ -136,6 +136,8 @@ export class UsersResolver {
       return user.profile
     }
     console.log('fetching user profile')
-    // const profile = await t
+    const { payload } = await this.profileService.getProfileByUserId(user.id)
+    return payload;
+
   }
 }

@@ -17,7 +17,7 @@ import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { PostIdArgs } from './args/post-id.args';
 import { UserIdArgs } from './args/user-id.args';
 import { Post } from './entities';
-import { PostConnection } from './models/post-connection.model';
+import { PostConnection, PostCursorConnection } from './models/post-connection.model';
 import { PostOrder } from './dto/post-order.input';
 import { CreatePostInput } from './dto/create-post.input';
 import { PostsService } from './posts.service';
@@ -53,40 +53,40 @@ export class PostsResolver {
     return newPost
   }
 
-  // @Query(() => PostConnection)
-  // async publishedPosts(
-  //   @Args() { after, before, first, last }: PaginationArgs,
-  //   @Args({ name: 'query', type: () => String, nullable: true })
-  //   query: string,
-  //   @Args({
-  //     name: 'orderBy',
-  //     type: () => PostOrder,
-  //     nullable: true,
-  //   })
-  //   orderBy: PostOrder
-  // ) {
-  //   const a = await findManyCursorConnection(
-  //     (args) =>
-  //       this.prisma.post.findMany({
-  //         include: { author: true },
-  //         where: {
-  //           published: true,
-  //           title: { contains: query || '' },
-  //         },
-  //         orderBy: orderBy ? { [orderBy.field]: orderBy.direction } : null,
-  //         ...args,
-  //       }),
-  //     () =>
-  //       this.prisma.post.count({
-  //         where: {
-  //           published: true,
-  //           title: { contains: query || '' },
-  //         },
-  //       }),
-  //     { first, last, before, after }
-  //   );
-  //   return a;
-  // }
+  @Query(() => PostCursorConnection, { name: 'getAllPublishedPosts' })
+  async publishedPosts(
+    @Args() { after, before, first, last }: PaginationArgs,
+    @Args({ name: 'query', type: () => String, nullable: true })
+    query: string,
+    @Args({
+      name: 'orderBy',
+      type: () => PostOrder,
+      nullable: true,
+    })
+    orderBy: PostOrder
+  ) {
+    // const a = await findManyCursorConnection(
+    // (args) =>
+    //   this.prisma.post.findMany({
+    //     include: { author: true },
+    //     where: {
+    //       published: true,
+    //       title: { contains: query || '' },
+    //     },
+    //     orderBy: orderBy ? { [orderBy.field]: orderBy.direction } : null,
+    //     ...args,
+    //   }),
+    // () =>
+    //   this.prisma.post.count({
+    //     where: {
+    //       published: true,
+    //       title: { contains: query || '' },
+    //     },
+    //   }),
+    // { first, last, before, after }
+    // );
+    return this.postService.getPublishedPosts(query, after, orderBy, first, last, before)
+  }
 
   @Query(() => PostConnection)
   async userPosts(@Args() args: UserIdArgs): Promise<PostConnection> {
