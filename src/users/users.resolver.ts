@@ -11,15 +11,16 @@ import { UserEntity } from 'src/common/decorators/user.decorator';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { UsersService } from './users.service';
 import { User } from './entities';
-import { UserResponse } from './models/user.model.old';
 import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { SearchByNameInput } from './dto/search-by-name.input';
 import { FollowersService } from 'src/followers/followers.service';
-import { UserConnection } from './models/user.model.old';
 import { PostsService } from 'src/posts/posts.service';
 import { Post } from 'src/posts/entities';
 import { PostConnection } from 'src/posts/models/post-connection.model';
+import { UserProfileService } from 'src/user-profile/user-profile.service';
+import { UserConnection, UserResponse } from 'src/common/responses';
+import { UserProfile } from 'src/user-profile/entities';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
@@ -27,7 +28,8 @@ export class UsersResolver {
   constructor(
     private usersService: UsersService,
     private followService: FollowersService,
-    private postService: PostsService
+    private postService: PostsService,
+    private profileService: UserProfileService
     // private prisma: PrismaService
   ) { }
 
@@ -42,9 +44,9 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query(() => User)
+  @Query(() => UserResponse)
   async getSingleUser(@UserEntity() user: User) {
-    return this.usersService.getSingleUser(user.id)
+    return this.usersService.findOne(user.id)
   }
 
   @Query(() => UserConnection)
@@ -126,5 +128,14 @@ export class UsersResolver {
     const limit = 20
     const { data, count } = await this.postService.getUserPosts(1, limit, author.id);
     return { payload: data, count }
+  }
+
+  @ResolveField(() => UserProfile)
+  async profile(@Parent() user: User) {
+    if (user.profile) {
+      return user.profile
+    }
+    console.log('fetching user profile')
+    // const profile = await t
   }
 }
