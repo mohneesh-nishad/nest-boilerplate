@@ -29,6 +29,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Follower {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  followedBy: Int
+  followers: [User!]
+  followings: [User!]
+  id: ID!
+  isFav: Boolean
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userId: Int
+}
+
 """User Gender"""
 enum Gender {
   FEMALE
@@ -54,12 +68,12 @@ type Mutation {
    Auth Required 
   """
   createPost(data: CreatePostInput!): Post!
-  followUser(userId: Int!): followers!
+  followUser(userId: Int!): Follower!
   login(data: LoginInput!): Auth!
   refreshToken(token: JWT!): Token!
   signup(data: SignupInput!): Auth!
   updateUser(data: UpdateUserInput!): User!
-  updateUserProfile(data: UpdateProfileInput!): User!
+  updateUserProfile(data: UpdateProfileInput!): UserResponse!
 }
 
 type Post {
@@ -96,11 +110,18 @@ enum PostOrderField {
   updatedAt
 }
 
+type ProfileResponse {
+  msg: String!
+  payload: UserProfile
+  status: Int!
+}
+
 type Query {
   allUsers: UserConnection!
   getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
+  getMyProfile: ProfileResponse!
   getPost(postId: Int!): Post!
-  getSingleUser: User!
+  getSingleUser: UserResponse!
   hello(name: String!): String!
   helloWorld: String!
   me: User!
@@ -169,7 +190,7 @@ type User {
   nonce: String
   phoneNumber: String
   posts: PostConnection
-  profile: userProfile
+  profile: UserProfile
   role: Role!
   tcgAvatar: String
   updatedAt: DateTime!
@@ -187,33 +208,25 @@ type UserConnection {
   status: String
 }
 
-type followers {
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  followedBy: Int
-  followers: [User!]
-  followings: [User!]
-  id: ID!
-  isFav: Boolean
+type UserProfile {
+  bio: String
+  country: String
+  gender: Gender
+  id: Int!
+  isDeleted: DateTime
+  job: String
+  userId: Int!
+  website: String
+}
 
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
-  userId: Int
+type UserResponse {
+  msg: String!
+  payload: User
+  status: Int!
 }
 
 input getAllPostInput {
   limit: Int = 20
   orderBy: PostOrderField!
   page: Int = 1
-}
-
-type userProfile {
-  bio: String
-  country: String
-  gender: Gender
-  isDeleted: Boolean
-  job: String
-  user: User!
-  userId: Int!
-  website: String
 }
