@@ -111,10 +111,9 @@ export class User extends Model<User> {
   @Field(() => [User], { nullable: true })
   followings?: User[]
 
-  // @HasOne(() => UserProfile, { onDelete: 'cascade', hooks: true })
-  // @BelongsTo(() => UserProfile, 'userId')
-  @ForeignKey(() => UserProfile)
-  @Field(() => UserProfile, { nullable: true })
+
+  @HasOne(() => UserProfile, { onDelete: 'cascade', hooks: true })
+  @Field(() => UserProfile)
   profile?: UserProfile
 }
 
