@@ -7,9 +7,10 @@ import { User } from './entities';
 import { FollowersModule } from 'src/followers/followers.module';
 import { PostsService } from 'src/posts/posts.service';
 import { PostsModule } from 'src/posts/posts.module';
+import { UserProfileModule } from 'src/user-profile/user-profile.module';
 
 @Module({
-  imports: [FollowersModule, forwardRef(() => PostsModule)],
+  imports: [FollowersModule, forwardRef(() => PostsModule), UserProfileModule],
   providers: [UsersResolver, UsersService, PasswordService, ...usersProviders],
   exports: [UsersService]
 })

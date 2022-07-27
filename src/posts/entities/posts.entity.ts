@@ -4,7 +4,7 @@ import { BaseModel } from "src/common/models/base.model";
 import { User } from "src/users/entities";
 
 @Table({ tableName: 'posts' })
-@ObjectType()
+@ObjectType('Post')
 export class Post extends BaseModel {
 
   @Field(() => Int)

@@ -5,7 +5,7 @@ import { User } from "src/users/entities";
 
 
 @Table({ modelName: 'followers' })
-@ObjectType()
+@ObjectType('Follower')
 export class Followers extends BaseModel {
 
   @Field()
