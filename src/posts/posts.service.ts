@@ -46,18 +46,22 @@ export class PostsService {
   }
 
 
-  async getPublishedPosts(query: string, after?: string, orderBy?: PostOrder, first: number = 5, last?: number, before?: string, cursor?: string) {
-    console.log((first || after) && (last || before))
+  async getPublishedPosts(query: string, limit: number = 5, after?: string, before?: string, orderBy?: PostOrder) {
 
-    if ((first || after) && (last || before)) throw new BadRequestException(`Only 'first with after' and 'before with last' works. Other combination not supported simultaneously`)
-    if (last && !before) throw new BadRequestException('cant use last without a before cursor.');
+    // if ((first || after) && (last || before)) throw new BadRequestException(`Only 'first with after' and 'before with last' works. Other combination not supported simultaneously`)
+
+    if (after && before) throw new BadRequestException('cant use both after/before options simultaneously.');
     const where_clause = { title: { [Op.iLike]: `%${query}%` } }
 
-    console.log({ orderBy })
-    const data = await this.postRepo.paginate({ where: where_clause, first, after, last, before, cursor, order: orderBy ? [orderBy.field, orderBy.direction] : [] })
-    console.log(data)
-    const totalCount = await this.postRepo.count({ where: where_clause })
-    return { ...data, totalCount }
+    const paginationOpts: any = { order: orderBy ? [orderBy.field, orderBy.direction] : null, where: where_clause, limit }
+    if (after && !before) paginationOpts.after = after
+    else if (!after && before) paginationOpts.before = before
+    // const data = await this.postRepo.paginate({ where: where_clause, first, after, last, before, cursor, order: orderBy ? [orderBy.field, orderBy.direction] : [] })
+    const data = await this.postRepo.paginate(paginationOpts)
+    // console.log(data)
+    const edgesCount = data.edges.length
+    // const totalCount = await this.postRepo.count({ where: where_clause })
+    return { ...data, edgesCount }
   }
 
   async getSinglePostOfUser(postId: number, userId: number) {

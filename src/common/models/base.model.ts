@@ -28,8 +28,3 @@ export abstract class BaseModel extends Model {
 
   declare static paginate: (options: CursorOptions) => Promise<PaginationConnection<Model>>
 }
-
-const options = {
-  methodName: 'paginate',
-  primaryKeyField: 'id',
-};

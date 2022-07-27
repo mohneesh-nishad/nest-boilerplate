@@ -20,6 +20,8 @@ export default function Paginated<TItem>(TItemClass: Type<TItem>) {
 
     // @Field((type) => [TItemClass], { nullable: true })
     // nodes: Array<TItem>;
+    @Field(() => Int)
+    edgesCount: number
 
     @Field(() => PageInfo)
     pageInfo: PageInfo;

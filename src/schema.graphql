@@ -117,6 +117,7 @@ type PostConnection {
 
 type PostCursorConnection {
   edges: [PostEdge!]
+  edgesCount: Int!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -150,7 +151,7 @@ type ProfileResponse {
 type Query {
   allUsers: UserConnection!
   getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
-  getAllPublishedPosts(after: String, before: String, first: Int, last: Int, orderBy: PostOrder, query: String, skip: Int): PostCursorConnection!
+  getAllPublishedPosts(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): PostCursorConnection!
   getMyProfile: ProfileResponse!
   getPost(postId: Int!): Post!
   getSingleUser: UserResponse!

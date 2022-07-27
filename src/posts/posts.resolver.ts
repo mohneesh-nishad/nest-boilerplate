@@ -55,7 +55,7 @@ export class PostsResolver {
 
   @Query(() => PostCursorConnection, { name: 'getAllPublishedPosts' })
   async publishedPosts(
-    @Args() { after, before, first, last }: PaginationArgs,
+    @Args() { after, before, limit }: PaginationArgs,
     @Args({ name: 'query', type: () => String, nullable: true })
     query: string,
     @Args({
@@ -65,27 +65,7 @@ export class PostsResolver {
     })
     orderBy: PostOrder
   ) {
-    // const a = await findManyCursorConnection(
-    // (args) =>
-    //   this.prisma.post.findMany({
-    //     include: { author: true },
-    //     where: {
-    //       published: true,
-    //       title: { contains: query || '' },
-    //     },
-    //     orderBy: orderBy ? { [orderBy.field]: orderBy.direction } : null,
-    //     ...args,
-    //   }),
-    // () =>
-    //   this.prisma.post.count({
-    //     where: {
-    //       published: true,
-    //       title: { contains: query || '' },
-    //     },
-    //   }),
-    // { first, last, before, after }
-    // );
-    return this.postService.getPublishedPosts(query, after, orderBy, first, last, before)
+    return this.postService.getPublishedPosts(query, limit, after, before, orderBy)
   }
 
   @Query(() => PostConnection)
