@@ -216,7 +216,7 @@ mutation Signup($data:SignupInput!){
 ```
 
 ```js
-mutation MakePost($data: CreatePostInput!){
+mutation CreatePost($data: CreatePostInput!){
   createPost(data:$data){
     id
     title
@@ -291,6 +291,66 @@ mutation{
 
 ```json
 
+```
+
+## Update User Profile
+
+```js
+mutation UserProfile($data: UpdateProfileInput!) {
+  updateUserProfile(data: $data) {
+    payload {
+      id
+      name
+      profile {
+        id
+        userId
+        gender
+        bio
+        website
+        isDeleted
+      }
+    }
+  }
+}
+
+```
+
+- variables
+
+```json
+{
+  "data": {
+    "gender": "MALE",
+    "bio": "bio hazard"
+  }
+}
+```
+
+### Get Own Profile
+
+```js
+query myProfile {
+  getMyProfile {
+    payload {
+      id
+      userId
+      gender
+      website
+      bio
+      country
+      isDeleted
+    }
+    status
+    msg
+  }
+}
+
+```
+
+```json
+{
+  "authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1ODkwNDY1OSwiZXhwIjoxNjU5NTA5NDU5fQ.qOFMVpQXREs5kBB1hvannz4FVcB24sO2eR-pe_phNeE"
+}
 ```
 
 ## Rest Api
