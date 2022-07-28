@@ -55,6 +55,13 @@ A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 """
 scalar JWT
 
+input LeagueCreateDto {
+  leagueId: Int = 1
+  rating: Int = 0
+  seriesId: Int = 1
+  userId: Int!
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -68,6 +75,7 @@ type Mutation {
    Auth Required 
   """
   createPost(data: CreatePostInput!): Post!
+  createUserleague(createUserleagueInput: LeagueCreateDto!): UserLeague!
   followUser(userId: Int!): Follower!
   login(data: LoginInput!): Auth!
   refreshToken(token: JWT!): Token!
@@ -85,10 +93,10 @@ enum OrderDirection {
 }
 
 type PageInfo {
-  endCursor: String
+  endCursor: String!
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: String
+  startCursor: String!
 }
 
 type Post {
@@ -152,9 +160,11 @@ type Query {
   allUsers: UserConnection!
   getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
   getAllPublishedPosts(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): PostCursorConnection!
+  getCursorBasedUserLeagueSearch(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): UserleagueCursorConnection
   getMyProfile: ProfileResponse!
   getPost(postId: Int!): Post!
   getSingleUser: UserResponse!
+  getUserleagueById(id: Int!): UserLeague
   hello(name: String!): String!
   helloWorld: String!
   me: User!
@@ -219,6 +229,7 @@ type User {
   isRegister: Boolean!
   isVerified: Boolean!
   lastName: String
+  leagues: [UserLeague!]!
   name: String!
   nonce: String
   phoneNumber: String
@@ -239,6 +250,31 @@ type UserConnection {
   page: Int
   payload: [User!]
   status: String
+}
+
+type UserLeague {
+  battles: Int!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  draw: Int!
+  id: ID!
+  leagueId: Int!
+  loose: Int!
+  maxStreak: Int!
+  rating: Int!
+  rewards: Int!
+  seriesId: Int
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  userId: Int!
+  wins: Int!
+}
+
+type UserLeagueEdge {
+  cursor: String!
+  node: UserLeague!
 }
 
 type UserProfile {
@@ -262,6 +298,13 @@ type UserResponse {
   msg: String!
   payload: User
   status: Int!
+}
+
+type UserleagueCursorConnection {
+  edges: [UserLeagueEdge!]
+  edgesCount: Int!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input getAllPostInput {

@@ -2,9 +2,22 @@ import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
 import { PageInfo } from './page-info.model';
 
+export interface IEdgeType<TItem> {
+  cursor: string;
+  node: TItem
+}
+
+export interface IPaginatedType<T> {
+  edges: Array<IEdgeType<T>>
+  edgesCount: number
+  pageInfo: PageInfo
+  totalCount: number
+}
+
+
 export default function Paginated<TItem>(TItemClass: Type<TItem>) {
   @ObjectType(`${TItemClass.name}Edge`)
-  abstract class EdgeType {
+  class EdgeType {
     @Field(() => String)
     cursor: string;
 
@@ -13,8 +26,9 @@ export default function Paginated<TItem>(TItemClass: Type<TItem>) {
   }
 
   // `isAbstract` decorator option is mandatory to prevent registering in schema
-  @ObjectType({ isAbstract: true })
-  abstract class PaginatedType {
+  // @ObjectType({ isAbstract: true })
+  @ObjectType()
+  class PaginatedType {
     @Field(() => [EdgeType], { nullable: true })
     edges: Array<EdgeType>;
 

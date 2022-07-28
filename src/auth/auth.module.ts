@@ -9,6 +9,7 @@ import { AuthResolver } from './auth.resolver';
 import { JwtStrategy } from './jwt.strategy';
 import { SecurityConfig } from 'src/common/configs/config.interface';
 import { UsersModule } from 'src/users/users.module';
+import { UserLeaguesModule } from 'src/user-leagues/user-leagues.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { UsersModule } from 'src/users/users.module';
       },
       inject: [ConfigService],
     }),
+    UserLeaguesModule
   ],
   providers: [
     AuthService,

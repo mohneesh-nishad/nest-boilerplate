@@ -15,6 +15,7 @@ import { SecurityConfig } from 'src/common/configs/config.interface';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities';
 import { Auth } from './models/auth.entity';
+import { UserLeaguesService } from 'src/user-leagues/user-leagues.service';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,8 @@ export class AuthService {
     // private readonly prisma: PrismaService,
     private readonly user: UsersService,
     private readonly passwordService: PasswordService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly userLeagues: UserLeaguesService
   ) { }
 
   async createUser(payload: SignupInput): Promise<Auth> {
@@ -36,6 +38,7 @@ export class AuthService {
       if (emailExist) throw new ConflictException;
       const user = await this.user.create({ ...payload, password: hashedPassword });
       // console.log(user.toJSON())
+      await this.userLeagues.createLeague(user.id)
       return {
         user: user.toJSON(),
         ...this.generateTokens({

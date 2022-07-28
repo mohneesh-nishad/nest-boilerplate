@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class PageInfo {
   // @Field((type) => String, { nullable: true })
-  endCursor?: string;
+  endCursor: string;
 
   // @Field((type) => Boolean)
   hasNextPage: boolean;
@@ -12,5 +12,5 @@ export class PageInfo {
   hasPreviousPage: boolean;
 
   // @Field((type) => String, { nullable: true })
-  startCursor?: string;
+  startCursor: string;
 }

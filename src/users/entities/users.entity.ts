@@ -6,6 +6,7 @@ import { IFollowers } from 'src/followers/models/followers.model';
 import { Post } from 'src/posts/entities';
 import { PostConnection } from 'src/posts/models/post-connection.model';
 import { IPost } from 'src/posts/models/post.model';
+import { UserLeague } from 'src/user-leagues/entities';
 import { UserProfile } from '../../user-profile/entities/user-profile.entity';
 
 
@@ -115,6 +116,10 @@ export class User extends Model<User> {
   @HasOne(() => UserProfile, { onDelete: 'cascade', hooks: true })
   @Field(() => UserProfile)
   profile?: UserProfile
+
+  @HasMany(() => UserLeague, { onDelete: 'cascade', hooks: true })
+  @Field(() => [UserLeague])
+  leagues: UserLeague[]
 }
 
 

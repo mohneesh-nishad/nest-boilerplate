@@ -16,6 +16,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { DatabaseModule } from './core/database/db.module';
 import { FollowersModule } from './followers/followers.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
+import { UserLeaguesModule } from './user-leagues/user-leagues.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UserProfileModule } from './user-profile/user-profile.module';
     PostsModule,
     FollowersModule,
     UserProfileModule,
+    UserLeaguesModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
