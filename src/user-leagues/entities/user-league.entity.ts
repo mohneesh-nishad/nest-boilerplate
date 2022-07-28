@@ -48,4 +48,13 @@ export class UserLeague extends BaseModel {
     @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
     rewards: number;
 
+
+    @Field()
+    @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
+    rankByLeague: number
+
+    @Field()
+    @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
+    rankBySeries: number
+
 }

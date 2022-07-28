@@ -262,6 +262,8 @@ type UserLeague {
   leagueId: Int!
   loose: Int!
   maxStreak: Int!
+  rankByLeague: Int!
+  rankBySeries: Int!
   rating: Int!
   rewards: Int!
   seriesId: Int
