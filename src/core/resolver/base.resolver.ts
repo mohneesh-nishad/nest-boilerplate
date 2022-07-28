@@ -28,7 +28,6 @@ export interface IBaseResolver<T, C> {
 
 
 export function BaseResolver<T, C>(entityType: Constructor<T>, createInputType: C): Type<IBaseResolver<T, C>> {
-
     @ObjectType(`${capitalize(entityType.name)}CursorConnection`)
     class BaseCursorConnection extends Paginated(entityType) { }
 

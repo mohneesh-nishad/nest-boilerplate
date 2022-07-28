@@ -75,6 +75,7 @@ type Mutation {
    Auth Required 
   """
   createPost(data: CreatePostInput!): Post!
+  createSeries(createSeriesInput: SeriesCreateDto!): Series!
   createUserleague(createUserleagueInput: LeagueCreateDto!): UserLeague!
   followUser(userId: Int!): Follower!
   login(data: LoginInput!): Auth!
@@ -160,9 +161,11 @@ type Query {
   allUsers: UserConnection!
   getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
   getAllPublishedPosts(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): PostCursorConnection!
+  getCursorBasedSeriesSearch(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): SeriesCursorConnection
   getCursorBasedUserLeagueSearch(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): UserleagueCursorConnection
   getMyProfile: ProfileResponse!
   getPost(postId: Int!): Post!
+  getSeriesById(id: Int!): Series
   getSingleUser: UserResponse!
   getUserleagueById(id: Int!): UserLeague
   hello(name: String!): String!
@@ -180,6 +183,32 @@ enum Role {
 
 input SearchByNameInput {
   name: String!
+}
+
+type Series {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+input SeriesCreateDto {
+  name: String!
+}
+
+type SeriesCursorConnection {
+  edges: [SeriesEdge!]
+  edgesCount: Int!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type SeriesEdge {
+  cursor: String!
+  node: Series!
 }
 
 input SignupInput {

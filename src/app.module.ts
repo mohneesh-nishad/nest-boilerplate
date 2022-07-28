@@ -17,6 +17,8 @@ import { DatabaseModule } from './core/database/db.module';
 import { FollowersModule } from './followers/followers.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
 import { UserLeaguesModule } from './user-leagues/user-leagues.module';
+import { SeriesResolver } from './series/series.resolver';
+import { SeriesModule } from './series/series.module';
 
 @Module({
   imports: [
@@ -35,8 +37,9 @@ import { UserLeaguesModule } from './user-leagues/user-leagues.module';
     FollowersModule,
     UserProfileModule,
     UserLeaguesModule,
+    SeriesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [AppService, AppResolver, SeriesResolver],
 })
 export class AppModule { }
