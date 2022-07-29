@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Followers } from 'src/followers/entities';
 import { Post } from 'src/posts/entities';
+import { Series } from 'src/series/entities';
 import { UserLeague } from 'src/user-leagues/entities';
 import { UserProfile } from 'src/user-profile/entities';
 import { User } from 'src/users/entities';
@@ -17,7 +18,7 @@ export const databaseProviders = [{
     console.log(config)
     const sequelize = new Sequelize(config);
     // this initializes models firsthand, Eager Loading
-    sequelize.addModels([User, Post, Followers, UserProfile, UserLeague]);
+    sequelize.addModels([User, Post, Followers, UserProfile, UserLeague, Series]);
     //* this Invokes models lazily, not instanciated on launch
     // sequelize.addModels([process.cwd() + '/**/entities'])
     await sequelize.sync();
