@@ -11,22 +11,23 @@ export interface IBaseDataService<T, C> {
 
     findOne: (id: number) => Promise<T>
 
-    getPaginatedResult: (query: string, limit: number, after: string, before: string, orderBy: PostOrder) => Promise<IPaginatedType<T>>
+    getPaginatedResult?: (query: string, limit: number, after: string, before: string, orderBy: PostOrder) => Promise<IPaginatedType<T>>
 
     create: (input: C) => Promise<T | null>
 }
 
 
-// export function BaseDataService<T>(entity: Constructor<T>, service): Type<IBaseDataService<T>> {
-//     class DataService implements IBaseDataService<T>{
-//         constructor(@Inject(`${entity.name?.toUpperCase()}_REPOSITORY`) private readonly repo: typeof entity) { }
+// export function BaseDataService<T, C>(entity: Constructor<T>, service): Type<IBaseDataService<T, C>> {
+//     const REPO = `${entity.name?.toUpperCase()}_REPOSITORY`;
+//     class DataService implements IBaseDataService<T, C>{
+//         constructor(@Inject(REPO) private readonly repo: typeof entity) { }
 
 
 //         async findOne(id: number) {
 //             return await this.repo.findOne(id);
 //         }
 
-    
+
 //     }
 
 
