@@ -7,6 +7,6 @@ import { SeriesService } from './series.service';
 @Resolver()
 export class SeriesResolver extends BaseResolver(Series, SeriesCreateDto) {
   constructor(private readonly seriesService: SeriesService) {
-    super()
+    super(seriesService)
   }
 }
