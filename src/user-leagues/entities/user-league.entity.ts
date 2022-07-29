@@ -1,6 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { BaseModel } from "src/common/models/base.model";
+import { Series } from "src/series/entities";
 import { User } from "src/users/entities";
 
 
@@ -18,6 +19,7 @@ export class UserLeague extends BaseModel {
 
     @Field({ nullable: true })
     @Column({ type: DataType.INTEGER, allowNull: true })
+    @ForeignKey(() => Series)
     seriesId: number;
 
     @Field()
