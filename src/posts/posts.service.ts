@@ -46,12 +46,12 @@ export class PostsService {
   }
 
 
-  async getPublishedPosts(query: string, limit: number = 5, after?: string, before?: string, orderBy?: PostOrder) {
+  async searchAllPosts_v2(query: string, limit: number = 5, after?: string, before?: string, orderBy?: PostOrder) {
 
     // if ((first || after) && (last || before)) throw new BadRequestException(`Only 'first with after' and 'before with last' works. Other combination not supported simultaneously`)
-
+    let where_clause = {};
     if (after && before) throw new BadRequestException('cant use both after/before options simultaneously.');
-    const where_clause = { title: { [Op.iLike]: `%${query}%` } }
+    if (query) where_clause = { title: { [Op.iLike]: `%${query}%` } }
 
     const paginationOpts: any = { order: orderBy ? [orderBy.field, orderBy.direction] : null, where: where_clause, limit }
     if (after && !before) paginationOpts.after = after

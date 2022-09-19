@@ -1,4 +1,5 @@
 import { Inject, Type } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
 import { Model } from "sequelize-typescript";
 import { IPaginatedType } from "src/common/pagination/pagination";
 import { PostOrder } from "src/posts/dto/post-order.input";
@@ -17,19 +18,25 @@ export interface IBaseDataService<T, C> {
 }
 
 
-// export function BaseDataService<T, C>(entity: Constructor<T>, service): Type<IBaseDataService<T, C>> {
-//     const REPO = `${entity.name?.toUpperCase()}_REPOSITORY`;
-//     class DataService implements IBaseDataService<T, C>{
-//         constructor(@Inject(REPO) private readonly repo: typeof entity) { }
+export function BaseDataService<T, C>(entity: Constructor<T>): Type<IBaseDataService<T, C>> {
+    const REPO = `${entity.name?.toUpperCase()}_REPOSITORY`;
+    class DataService implements IBaseDataService<T, C>{
+        constructor(@InjectModel(entity) private readonly repo: typeof entity) { }
 
 
-//         async findOne(id: number) {
-//             return await this.repo.findOne(id);
-//         }
+        async findOne(id: number) {
+            // @ts-ignore
+            return await this.repo.findOne({ where: { id } });
+        }
 
 
-//     }
+        async create(input: C) {
+            // @ts-ignore
+            return await this.repo.create({ ...input })
+        }
+
+    }
 
 
-//     return DataService
-// }
+    return DataService
+}

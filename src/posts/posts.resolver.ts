@@ -53,19 +53,15 @@ export class PostsResolver {
     return newPost
   }
 
-  @Query(() => PostCursorConnection, { name: 'getAllPublishedPosts' })
+  @Query(() => PostCursorConnection, { name: 'searchAllPosts' })
   async publishedPosts(
     @Args() { after, before, limit }: PaginationArgs,
     @Args({ name: 'query', type: () => String, nullable: true })
     query: string,
-    @Args({
-      name: 'orderBy',
-      type: () => PostOrder,
-      nullable: true,
-    })
+    @Args({ name: 'orderBy', type: () => PostOrder, nullable: true })
     orderBy: PostOrder
   ) {
-    return this.postService.getPublishedPosts(query, limit, after, before, orderBy)
+    return this.postService.searchAllPosts_v2(query, limit, after, before, orderBy)
   }
 
   @Query(() => PostConnection)

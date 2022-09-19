@@ -238,6 +238,52 @@ mutation CreatePost($data: CreatePostInput!){
 }
 ```
 
+### get single user by token
+
+```ts
+query me {
+    avatar
+    birthday
+    coins
+    createdAt
+    email
+    firstName
+    followers
+    followings
+    id
+    isDeleted
+    isRegister
+    isVerified
+    lastName
+    // leagues
+    name
+    nonce
+    phoneNumber
+    posts {
+      id
+      title
+    }
+    profile {
+      gender
+      bio
+      country
+      job
+    }
+    role
+    tcgAvatar
+    updatedAt
+    userInfo
+    userType
+    walletAddress
+  }
+```
+
+```json
+
+```
+
+## get single post
+
 ```js
 query SinglePost{
   getPost(postId:1){

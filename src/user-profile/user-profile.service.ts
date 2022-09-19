@@ -19,7 +19,7 @@ export class UserProfileService {
 
     async getProfileByUserId(userId: number) {
         const profile = await this.profileRepo.findOne({ where: { userId: userId } })
-        if (!profile) throw new NotFoundException('User Profile Not Found')
+        // if (!profile) throw new NotFoundException('User Profile Not Found')
         // console.log(profile.toJSON())
         return { payload: profile, status: 200, msg: 'User profile fetched' }
     }

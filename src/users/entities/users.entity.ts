@@ -31,7 +31,7 @@ export class User extends Model<User> {
 
   @Field({ nullable: true })
   @Column({ type: DataType.DATE, allowNull: true, defaultValue: null })
-  dob: Date;
+  birthday: Date;
 
   @Field({ nullable: true })
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
@@ -103,12 +103,12 @@ export class User extends Model<User> {
   @UpdatedAt
   updatedAt: Date;
 
-  @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
+  @HasMany(() => Followers)
   @Field(() => [User], { nullable: true })
   // followers: User[]
   followers?: User[]
 
-  @HasMany(() => Followers, { onDelete: 'cascade', hooks: true })
+  @HasMany(() => Followers)
   @Field(() => [User], { nullable: true })
   followings?: User[]
 

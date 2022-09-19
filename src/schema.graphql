@@ -160,7 +160,6 @@ type ProfileResponse {
 type Query {
   allUsers: UserConnection!
   getAllPosts(getAllPostInput: getAllPostInput!): PostConnection!
-  getAllPublishedPosts(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): PostCursorConnection!
   getCursorBasedSeriesSearch(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): SeriesCursorConnection
   getCursorBasedUserLeagueSearch(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): UserleagueCursorConnection
   getMyProfile: ProfileResponse!
@@ -171,6 +170,7 @@ type Query {
   hello(name: String!): String!
   helloWorld: String!
   me: User!
+  searchAllPosts(after: String, before: String, limit: Int!, orderBy: PostOrder, query: String): PostCursorConnection!
   searchUserByName(data: SearchByNameInput!): UserConnection!
   userPosts(limit: Int = 20, orderBy: PostOrderField!, page: Int = 1, userId: Int): PostConnection!
 }
@@ -246,9 +246,9 @@ input UpdateUserInput {
 
 type User {
   avatar: String
+  birthday: DateTime
   coins: Float!
   createdAt: DateTime!
-  dob: DateTime
   email: String
   firstName: String
   followers: [User!]

@@ -16,7 +16,7 @@ export class UserProfile extends BaseModel {
     userId: number;
 
     @Field(() => Gender, { nullable: true })
-    @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
+    @Column({ type: DataType.STRING, allowNull: true, defaultValue: Gender.MALE })
     gender: Gender;
 
     @Field({ nullable: true })
@@ -39,8 +39,8 @@ export class UserProfile extends BaseModel {
     @DeletedAt
     isDeleted: Date
 
-    @HideField()
-    // @ForeignKey(() => User)
-    @BelongsTo(() => User)
-    user: User
+    // @HideField()
+    // // @ForeignKey(() => User)
+    // @BelongsTo(() => User)
+    // user: User
 }

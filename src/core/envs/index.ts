@@ -15,6 +15,7 @@ const db_config = () => {
                 port: process.env.DB_PORT,
                 dialect: process.env.DB_DIALECT || dialect,
                 autoLoadModels: true,
+                repositoryMode: false,
                 synchronize: true,
             }
             break;
