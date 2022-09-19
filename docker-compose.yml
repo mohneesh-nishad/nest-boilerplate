@@ -9,12 +9,16 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - APP_DB_NAME=test
+      - APP_DB_USER=postgres
+      - APP_DB_PASS=postgres
     env_file:
       - .env
     # networks:
     #   - nest-net
     volumes:
       - postgres:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d/
 
   nest-api:
     container_name: nest-api
@@ -22,11 +26,11 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     ports:
-      - 3000:3000
+      - 3000:3003
     depends_on:
       - postgres
     environment:
-      - NODE_ENV=docker-prod
+      - NODE_ENV=development
     env_file:
       - .env.docker
     # networks:
@@ -35,7 +39,6 @@ services:
 volumes:
   postgres:
     name: nest-db
-
 # this for using my existing local postgres container
 # networks:
 #   nest-net:
